@@ -13,6 +13,9 @@ In terms of artificial neural networks, an epoch refers to one cycle through the
 
 ![image info](./pics/5epochs_counts.png)
 
+X-axis is presenting each output (508 rows)
+ 
+
 
 ## After 300 training rounds
 
@@ -22,4 +25,4 @@ In terms of artificial neural networks, an epoch refers to one cycle through the
 
 ![image info](./pics/300epochs_counts.png)
 
-
+X-axis is presenting each output user count and predicted user count (508 rows)
