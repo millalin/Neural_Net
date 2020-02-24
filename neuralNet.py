@@ -14,9 +14,6 @@ try:
 except:
   print("error loading user data")
 
-user_data.head()
-
-print(user_data.columns)
 
 # data with x values and target user count columns
 #all columns needed (how x affects L1547777 user count?)
@@ -30,8 +27,7 @@ x_parameters = user_data[x_parameters_columns]
 
 # inputs
 inputs = np.array(user_data[x_parameters_columns])
-print("inputs")
-print(inputs)
+print("inputs", inputs)
 
 
 
@@ -44,25 +40,21 @@ user_counts_target_column = [x for x in user_data if x.endswith('L1547777')]
 x_values = user_data[x_parameters_usercount_target_colums]
 print("whole matrix" , x_values)
 
-print(x_values.dtypes)
 
 # type of target L1547777 is object. Need to change it to float 
 x_values.L1547777= x_values.L1547777.str.replace(',','.')
 x_values.L1547777 = x_values.L1547777.astype(float)
-x_values.head()
+
 
 #outputs
 user_data['L1547777']=user_data['L1547777'].str.replace(',','.')
 outputs = user_data[user_counts_target_column].astype(float)
 outputs = np.array(outputs)
-print("outputs now: ",outputs)
+print("outputs: ",outputs)
 
 
-plt.plot(x_values.L1547777)
-
-
-epochs = 1000 # number of rounds (forward and backward)
-batch_size = 500 # samples to put at once
+epochs = 300 # number of rounds (forward and backward)
+batch_size = 32 # samples to put at once
 def define_model():
   model = Sequential()
   model.add(Dense(64, input_shape=(10,), activation='relu')) #hidden layer and inputs size 10
@@ -79,13 +71,12 @@ def train_model(inp, outp, model, epochs, batch_size):
   plt.figure(figsize=(15,2.6))
   plt.plot(h.history['loss'])
   plt.title(u"Loss during training", fontweight='bold', fontsize=20)
+  plt.ylabel('Loss')
+  plt.xlabel('Training rounds')
 
   return model
 
 model = define_model()
-plt.figure(figsize=(10,3))
-plt.plot(inputs, outputs,'.')
-plt.title('Training data, avg user count, x parameter value')
 model = train_model(inputs, outputs, model, epochs, batch_size)
 
 plt.show()
@@ -93,16 +84,17 @@ plt.show()
 def predict_model():
   pred = model.predict(inputs, batch_size=500)
   
-  print(outputs,"pred", pred)
-
-
+  plt.title(u"Distribution of avg user counts", fontweight='bold', fontsize=20)
   sns.distplot(outputs)
   sns.distplot(pred)
+  plt.legend(['Original user counts', 'Predictions'])
   plt.show()
 
-  plt.figure(figsize=(9,3))
-  plt.plot(pred, color="blue")
-  plt.plot(outputs, color="green")
+  plt.figure(figsize=(11,5))
+  plt.ylabel('Average user count')
+  plt.xlabel('Measurement time')
+  plt.plot(pred, color="blue", marker='.')
+  plt.plot(outputs, color="green", marker='.')
   plt.title(u"Actual outputs and predictions", fontweight='bold', fontsize=20)
   plt.legend(['Predictions', 'Original user counts'])
 
