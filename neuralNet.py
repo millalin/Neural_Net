@@ -82,7 +82,7 @@ model = train_model(inputs, outputs, model, epochs, batch_size)
 plt.show()
 
 def predict_model():
-  pred = model.predict(inputs, batch_size=500)
+  pred = model.predict(inputs, batch_size=batch_size)
   
   plt.title(u"Distribution of avg user counts", fontweight='bold', fontsize=20)
   sns.distplot(outputs)
